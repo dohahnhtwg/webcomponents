@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="utf-8">
+      <script type="text/javascript" src="/bower_components/jquery/dist/jquery.js"></script>
+      <script src="bower_components/webcomponentsjs/webcomponents-loader.js"></script>
+      <link rel="stylesheet" href="stylesheets/main.css"></link>
+      <title>Name-Tag example</title>
+  </head>
+  <body>
+    <!-- Custom Element -->
+    <name-tag id="nametag" firstname="Dominik" lastname="Hahn"></name-tag>
+
+    <script>
+      	class NameTag extends HTMLElement {
+          constructor() {
+            super();
+            this._firstname = "";
+            this._lastname = "";
+          }
+
+          static get observedAttributes() { return ["firstname", "lastname"]; }
+
+          attributeChangedCallback(name, oldValue, newValue) {
+            switch(name) {
+              case "firstname":
+                this._firstname = newValue;
+                break;
+              case "lastname":
+                this._lastname = newValue;
+                break;
+              default:
+                throw new Error("attributeChangedCallback(name, oldValue, newValue): " +
+                  "No suitable attribute.");
+            }
+            this._updateRendering();
+          }
+
+          connectedCallback() {
+            this._updateRendering();
+          }
+
+          get firstname() {
+            return this._firstname;
+          }
+
+          set firstname(v) {
+            this.setAttribute("_firstname", v);
+          }
+
+          get lastname() {
+            return this._lastname;
+          }
+
+          set lastname(v) {
+            this.setAttribute("_lastname", v);
+          }
+
+          _updateRendering() {
+            var name = this._firstname + " " + this._lastname;
+            var $div = $("<div>").attr("id", "plate");
+            var $h1 = $("<h1>").text("Hello my name is ...");
+            var $p = $("<p>").text(name);
+            $div.append($h1, $p);
+            $(this).html($div);
+          }
+        }
+
+        window.addEventListener('WebComponentsReady', function(e) {
+          //all required polyfills have loaded
+          customElements.define("name-tag", NameTag);
+        });
+
+    </script>
+  </body>
+</html>

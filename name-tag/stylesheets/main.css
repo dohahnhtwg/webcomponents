@@ -1,0 +1,9 @@
+/*Main CSS*/
+
+#plate {
+    border-radius: 25px;
+    border: 2px solid #FF0000;
+    padding: 20px;
+    width: 300px;
+    height: 150px;
+}

@@ -1,0 +1,14 @@
+{
+  "name": "name-tag",
+  "version": "1.0.0",
+  "local-web-server": {
+    "port": 9000,
+    "forbid": "*.json"
+  },
+  "scripts": {
+    "start": "ws"
+  },
+  "dependencies": {
+    "ws": "^2.2.1"
+  }
+}
