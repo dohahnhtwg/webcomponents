@@ -3,20 +3,21 @@
   <head>
       <meta charset="utf-8">
       <script type="text/javascript" src="/bower_components/jquery/dist/jquery.js"></script>
-      <script src="bower_components/webcomponentsjs/webcomponents-loader.js"></script>
-      <link rel="stylesheet" href="stylesheets/main.css"></link>
+      <script src="/bower_components/custom-elements/custom-elements.min.js"></script>
+      <link rel="stylesheet" href="stylesheets/main.css">
       <title>Name-Tag example</title>
   </head>
   <body>
     <!-- Custom Element -->
     <name-tag id="nametag" firstname="Dominik" lastname="Hahn"></name-tag>
-
+    <div id="plate"><h1>Hello my name is ...</h1><p>Dominik Hahn</p></div>
     <script>
       	class NameTag extends HTMLElement {
           constructor() {
             super();
             this._firstname = "";
             this._lastname = "";
+            this._shadowRoot = this.attachShadow({mode: 'open'})
           }
 
           static get observedAttributes() { return ["firstname", "lastname"]; }
@@ -40,6 +41,14 @@
             this._updateRendering();
           }
 
+          disconnectedCallback()  {
+            // Clean up
+          }
+
+          adoptedCallback() {
+            // Moved into a new document
+          }
+
           get firstname() {
             return this._firstname;
           }
@@ -57,19 +66,22 @@
           }
 
           _updateRendering() {
+            this._shadowRoot.innerHTML = "";
             var name = this._firstname + " " + this._lastname;
+            var $style = $("<style>").text("#plate { border-radius: 25px;" +
+              "border: 2px solid #0000FF;" +
+              "padding: 20px;" +
+              "width: 300px;" +
+              "height: 150px; }")
             var $div = $("<div>").attr("id", "plate");
             var $h1 = $("<h1>").text("Hello my name is ...");
             var $p = $("<p>").text(name);
             $div.append($h1, $p);
-            $(this).html($div);
+            $(this._shadowRoot).append($style, $div);
           }
         }
 
-        window.addEventListener('WebComponentsReady', function(e) {
-          //all required polyfills have loaded
-          customElements.define("name-tag", NameTag);
-        });
+        customElements.define("name-tag", NameTag);
 
     </script>
   </body>
